@@ -10,5 +10,20 @@ public class professor extends pessoa{
 		this.salario = salario;
 		this.disciplina = disciplina;
 	}
-
+	
+	
+	public double getSalario() {
+		return salario;
+	}
+	public void setSalario(double salario) {
+		this.salario = salario;
+	}
+	public String getDisciplina() {
+		return disciplina;
+	}
+	public void setDisciplina(String disciplina) {
+		this.disciplina = disciplina;
+	}
+	
+	
 }
