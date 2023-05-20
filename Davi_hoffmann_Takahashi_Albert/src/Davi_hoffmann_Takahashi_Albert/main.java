@@ -1,10 +1,11 @@
 package Davi_hoffmann_Takahashi_Albert;
 import java.util.Date;
+import java.util.*;
 
 public class main {
 
-	public main(String[] args) {
-		pessoa pessoa = new pessoa(null);
+	public static void main(String[] args) {
+		pessoa pessoa = new pessoa();
 		pessoa.setNome("Marcelo");
 		pessoa.setCpf("00000000000");
 		pessoa.setData_nascimento(new Date());
@@ -21,7 +22,7 @@ public class main {
 		System.out.println("Data: "+pessoa1.getData_nascimento());
 		
 		
-		professor prof = new professor(null, null, null, 0, null);
+		professor prof = new professor();
 		prof.setNome("Joao");
 		prof.setCpf("2222222222");
 		prof.setData_nascimento(new Date());

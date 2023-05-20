@@ -7,6 +7,8 @@ public class pessoa {
 	String nome;
 	String cpf;
 	Date data_nascimento;
+	
+	public pessoa() {}
 
 	public pessoa(String n, String c, Date d){
 		this.id=id;
