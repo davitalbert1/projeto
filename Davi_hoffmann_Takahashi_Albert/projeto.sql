@@ -28,9 +28,9 @@ id int primary key not null,
 numero_pessoas int not null,
 curso varchar(50),
 cursoID int,
-disciplinaID int,
-FOREIGN KEY (disciplinaID) REFERENCES curso(id),
-FOREIGN KEY (cursoID) REFERENCES sala(id)
+salaID int,
+FOREIGN KEY (cursoID) REFERENCES curso(id),
+FOREIGN KEY (salaID) REFERENCES sala(id)
 );
 
 create table if not exists turma(
