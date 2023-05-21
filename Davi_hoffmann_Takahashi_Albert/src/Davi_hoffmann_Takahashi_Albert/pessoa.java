@@ -3,18 +3,17 @@ import java.util.Date;
 
 public class pessoa {
 
-	int id;
-	String nome;
-	String cpf;
-	Date data_nascimento;
+	public int id;
+	public String nome, cpf;
+	public Date data_nascimento;
 	
 	public pessoa() {}
 
-	public pessoa(String n, String c, Date d){
-		this.id=id;
-		this.nome = n;
-		this.cpf  = c;
-		this.data_nascimento = d;
+	public pessoa(String nome, String cpf, Date data_nascimento, int id){
+		this.id= id;
+		this.nome = nome;
+		this.cpf  = cpf;
+		this.data_nascimento = data_nascimento;
 	}
 
 	public pessoa(String n, String c){

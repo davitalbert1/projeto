@@ -5,9 +5,16 @@ import java.util.*;
 public class main {
 
 	public static void main(String[] args) {
+		Scanner myObj = new Scanner(System.in);
 		pessoa pessoa = new pessoa();
-		pessoa.setNome("Marcelo");
-		pessoa.setCpf("00000000000");
+		
+		System.out.println("Nome: ");
+		pessoa.setNome(myObj.nextLine());
+		
+		System.out.println("CPF: ");
+		pessoa.setCpf(myObj.nextLine());
+		
+		
 		pessoa.setData_nascimento(new Date());
 
 		pessoa pessoa1 = new pessoa("Petri", "1111111111", new Date());
