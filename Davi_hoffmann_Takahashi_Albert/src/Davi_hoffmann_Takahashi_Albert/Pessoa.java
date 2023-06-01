@@ -6,18 +6,35 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 public class Pessoa {
 	
     private static final String URL = "jdbc:mysql://localhost:3306/projeto", SENHA = "", USUARIO = "root";
-	private static String email_pessoa, cpf_pessoa, endereco_pessoa, celular_pessoa, sobrenome_pessoa, nome_pessoa;
+	private static String sqlPessoa1;
+	private static String email_pessoa;
+	private static String cpf_pessoa;
+	private static String endereco_pessoa;
+	private static String celular_pessoa;
+	private static String sobrenome_pessoa;
+	private static String nome_pessoa;
 	private boolean is_professor_pessoa, is_aluno_pessoa;
 	private static int opcao=0;
-	protected static Connection connection=null;
-	protected static Connection conn=null;
+	protected static Connection connection=null, conn=null;
 	
 	static Scanner scanner = new Scanner(System.in);
-
+	
+	public Pessoa(String email_pessoa2, String cpf_pessoa2, String endereco_pessoa2, String celular_pessoa2, String sobrenome_pessoa2, String nome_pessoa2, boolean is_professor_pessoa2, boolean is_aluno_pessoa2){
+		Pessoa.email_pessoa= email_pessoa2;
+		Pessoa.endereco_pessoa= celular_pessoa2;
+		Pessoa.nome_pessoa = nome_pessoa2;
+		Pessoa.celular_pessoa = nome_pessoa2;
+		Pessoa.sobrenome_pessoa = sobrenome_pessoa2;
+		this.is_professor_pessoa = is_professor_pessoa2;
+		this.is_aluno_pessoa = is_aluno_pessoa2;
+		Armazenamento.conecta();
+        conn= Armazenamento.getConn();
+	}
 	
 	public static String getNome() {
 		Armazenamento.conecta();
@@ -25,36 +42,93 @@ public class Pessoa {
 	}
 	
 	public static void setNome(String nome) {
+		
 		nome_pessoa = nome;
+		sqlPessoa1 = "INSERT INTO pessoa (nome) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
 	public static void setSobrenome(String sobrenome) {
 		sobrenome_pessoa = sobrenome;
+		String sqlPessoa1 = "INSERT INTO pessoa (sobrenome) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void setCpf(String cpf) {
-	    cpf_pessoa = cpf;
+		cpf_pessoa = cpf;
+		String sqlPessoa1 = "INSERT INTO pessoa (cpf) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void setEmail(String email) {
-	    email_pessoa = email;
+		email_pessoa = email;
+		String sqlPessoa1 = "INSERT INTO pessoa (email) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void setCelular(String celular) {
-	    celular_pessoa = celular;
+		celular_pessoa = celular;
+		String sqlPessoa1 = "INSERT INTO pessoa (celular) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void setEndereco(String endereco) {
 		endereco_pessoa = endereco;
+		String sqlPessoa1 = "INSERT INTO pessoa (endereco) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void setIs_professor(boolean is_professor) {
-	    is_professor_pessoa = is_professor;
+		is_professor_pessoa = is_professor;
+		String sqlPessoa1 = "INSERT INTO pessoa (is_professor) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void setIs_aluno(boolean is_aluno) {
-	    is_aluno_pessoa = is_aluno;
+		is_aluno_pessoa = is_aluno;
+		String sqlPessoa1 = "INSERT INTO pessoa (is_aluno) VALUES (?)";
+		try {
+			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public String getCpf() {
@@ -71,7 +145,7 @@ public class Pessoa {
         
         try {
         Armazenamento.conecta();
-        String sqlPessoa1 = "INSERT INTO pessoa (nome, sobrenome, telefone, email, endereco) VALUES (?, ?, ?, ?, ?)";
+        Connection conn= Armazenamento.getConn();
         PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
         
         stmtPessoa1.setString(2, nome);
@@ -119,7 +193,6 @@ public class Pessoa {
 	}
 	
 	public static void deletarPessoa() throws SQLException{
-		Scanner scanner = new Scanner(System.in);
 		System.out.print("Você quer deletar pelo código da pessoa ou pelo nome e sobrenome?(1: código / 2: nome)");
 		opcao = scanner.nextInt();
             

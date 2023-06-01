@@ -17,7 +17,7 @@ class Turma extends Curso{
     }
 
     public String getProfessor() {
-        return Professor.nome;
+        return Professor.getCargo();
     }
 
     public int getSala() {

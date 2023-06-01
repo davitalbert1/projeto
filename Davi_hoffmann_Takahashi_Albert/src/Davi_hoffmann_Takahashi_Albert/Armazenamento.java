@@ -34,14 +34,17 @@ public class Armazenamento {
 			}
     }
     
-	public static Connection conecta() {
+	public static void conecta() {
 		try {
 			conn = DriverManager.getConnection(URL, USUARIO, SENHA);
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/projeto", "usuario", "senha");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/projeto", "root", "");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Acesso negado ao banco de dados. Erro: " + e.getMessage());
 		}
+	}
+	
+	public static Connection getConn() {
 		return conn;
 	}
     

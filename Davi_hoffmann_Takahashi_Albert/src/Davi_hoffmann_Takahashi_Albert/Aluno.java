@@ -11,6 +11,10 @@ public class Aluno extends Pessoa {
 	private static String curso_aluno;
 	
 	static Scanner scanner = new Scanner(System.in);
+	
+	public Aluno(String email_pessoa, String cpf_pessoa, String endereco_pessoa, String celular_pessoa, String sobrenome_pessoa, String nome_pessoa, boolean is_professor_pessoa, boolean is_aluno_pessoa) {
+		super (email_pessoa, cpf_pessoa, endereco_pessoa, celular_pessoa, sobrenome_pessoa, nome_pessoa, is_professor_pessoa, is_aluno_pessoa);
+	}
 
 	    public int getMatricula() {
 	        return matricula_aluno;

@@ -26,4 +26,8 @@ public class Professor extends Pessoa{
 		    setSalario(salario);
 		    setCargo(cargo);
 		}
+
+		public static String getCargo() {
+			return cargo_professor;
+		}
 }
