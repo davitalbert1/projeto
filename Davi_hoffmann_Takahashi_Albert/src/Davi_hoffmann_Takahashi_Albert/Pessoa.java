@@ -6,171 +6,109 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.sql.Statement;
 
 public class Pessoa {
 	
     private static final String URL = "jdbc:mysql://localhost:3306/projeto", SENHA = "", USUARIO = "root";
-	private static String sqlPessoa1;
-	private static String email_pessoa;
-	private static String cpf_pessoa;
-	private static String endereco_pessoa;
-	private static String celular_pessoa;
-	private static String sobrenome_pessoa;
+	private String email_pessoa, cpf_pessoa, endereco_pessoa, celular_pessoa, sobrenome_pessoa;
 	private static String nome_pessoa;
 	private boolean is_professor_pessoa, is_aluno_pessoa;
-	private static int opcao=0;
 	protected static Connection connection=null, conn=null;
 	
 	static Scanner scanner = new Scanner(System.in);
-	
-	public Pessoa(String email_pessoa2, String cpf_pessoa2, String endereco_pessoa2, String celular_pessoa2, String sobrenome_pessoa2, String nome_pessoa2, boolean is_professor_pessoa2, boolean is_aluno_pessoa2){
-		Pessoa.email_pessoa= email_pessoa2;
-		Pessoa.endereco_pessoa= celular_pessoa2;
-		Pessoa.nome_pessoa = nome_pessoa2;
-		Pessoa.celular_pessoa = nome_pessoa2;
-		Pessoa.sobrenome_pessoa = sobrenome_pessoa2;
-		this.is_professor_pessoa = is_professor_pessoa2;
-		this.is_aluno_pessoa = is_aluno_pessoa2;
-		Armazenamento.conecta();
-        conn= Armazenamento.getConn();
-	}
+
 	
 	public static String getNome() {
-		Armazenamento.conecta();
+		
 		return nome_pessoa;
 	}
 	
-	public static void setNome(String nome) {
-		
+	public void setNome(String nome) {
 		nome_pessoa = nome;
-		sqlPessoa1 = "INSERT INTO pessoa (nome) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 	
-	public static void setSobrenome(String sobrenome) {
+	public void setSobrenome(String sobrenome) {
 		sobrenome_pessoa = sobrenome;
-		String sqlPessoa1 = "INSERT INTO pessoa (sobrenome) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
-	public static void setCpf(String cpf) {
-		cpf_pessoa = cpf;
-		String sqlPessoa1 = "INSERT INTO pessoa (cpf) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setCpf(String cpf) {
+	    cpf_pessoa = cpf;
 	}
 	
-	public static void setEmail(String email) {
-		email_pessoa = email;
-		String sqlPessoa1 = "INSERT INTO pessoa (email) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setEmail(String email) {
+	    email_pessoa = email;
 	}
 	
-	public static void setCelular(String celular) {
-		celular_pessoa = celular;
-		String sqlPessoa1 = "INSERT INTO pessoa (celular) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setCelular(String celular) {
+	    celular_pessoa = celular;
 	}
 	
-	public static void setEndereco(String endereco) {
+	public void setEndereco(String endereco) {
 		endereco_pessoa = endereco;
-		String sqlPessoa1 = "INSERT INTO pessoa (endereco) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void setIs_professor(boolean is_professor) {
-		is_professor_pessoa = is_professor;
-		String sqlPessoa1 = "INSERT INTO pessoa (is_professor) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    is_professor_pessoa = is_professor;
 	}
 	
 	public void setIs_aluno(boolean is_aluno) {
-		is_aluno_pessoa = is_aluno;
-		String sqlPessoa1 = "INSERT INTO pessoa (is_aluno) VALUES (?)";
-		try {
-			PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    is_aluno_pessoa = is_aluno;
 	}
 	
 	public String getCpf() {
 		return cpf_pessoa;
 	}
 	
-    public static long salvarPessoa() {
-    	
-        String nome = null;
-        String sobrenome = null;
-        String telefone = null;
-        String email = null;
-        String endereco = null;
+	public static ResultSet getPesquisa() {
+		ResultSet pessoa = null;
+		try {
+			Statement statement = Armazenamento.conn.createStatement();
+			pessoa = statement.executeQuery("SELECT count(*) FROM pessoa");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pessoa;
+	}
+	
+	public static ResultSet getPessoa() {
+		Statement statement;
+		try {
+			statement = Armazenamento.conn.createStatement();
+			ResultSet procurar_pessoa = statement.executeQuery("SELECT * FROM pessoa");
+			return procurar_pessoa;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+    public void inserir() {
         
         try {
-        Armazenamento.conecta();
-        Connection conn= Armazenamento.getConn();
-        PreparedStatement stmtPessoa1 = conn.prepareStatement(sqlPessoa1);
         
-        stmtPessoa1.setString(2, nome);
-        stmtPessoa1.setString(3, sobrenome);
-        stmtPessoa1.setString(4, telefone);
-        stmtPessoa1.setString(5, email);
-        stmtPessoa1.setString(6, endereco);
+        String sqlPessoa1 = "INSERT INTO pessoa (nome, celular, email, endereco) VALUES (?, ?, ?, ?)";
+        PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1);
+        
+        stmtPessoa1.setString(1, nome_pessoa);
+        stmtPessoa1.setString(2, celular_pessoa);
+        stmtPessoa1.setString(3, email_pessoa);
+        stmtPessoa1.setString(4, endereco_pessoa);
         stmtPessoa1.executeUpdate();
-        try (ResultSet generatedKeys = stmtPessoa1.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                return generatedKeys.getLong(1);
-            } else {
-                return 0;
-            }
-        }
+        stmtPessoa1.close();
+        Armazenamento.conn.close();
         
         } catch (SQLException e) {
         System.out.println("Erro ao salvar os dados da pessoa no banco de dados: " + e.getMessage());
-        return 0;
     }
 		
     	
     }
 	
-	public static void cadastrarPessoa() {
+	public void cadastrar() {
 		System.out.println("Digite o nome da pessoa:");
 	    String nome = scanner.next();
 		System.out.println("Digite o sobrenome da pessoa:");
@@ -192,45 +130,33 @@ public class Pessoa {
 	    setEndereco(endereco);
 	}
 	
-	public static void deletarPessoa() throws SQLException{
-		System.out.print("Você quer deletar pelo código da pessoa ou pelo nome e sobrenome?(1: código / 2: nome)");
-		opcao = scanner.nextInt();
-            
-            switch(opcao) {
-            case 1:
-            	try {
-                System.out.print("Insira o código da pessoa para deletar: ");
-                int codPessoa = scanner.nextInt();
-                String deletePessoaSql = "DELETE FROM pessoa WHERE cod_pessoa = ?";
-                PreparedStatement deletePessoaStatement = connection.prepareStatement(deletePessoaSql);
-                deletePessoaStatement.setInt(1, codPessoa);
-                int pessoaRowsAffected = deletePessoaStatement.executeUpdate();
-                System.out.println("Deletado " + pessoaRowsAffected + " informações na tabela.");
-            	}catch (SQLException e) {
-    				e.printStackTrace();
-    				System.out.println("Erro em acessar o banco de dados. Erro: " + e.getMessage());
-    						
-    			}
-            break;
-            case 2:
-            	try {
-            	System.out.print("Insira o código da pessoa para deletar: ");
-                int nomePessoa = scanner.nextInt();
-            	String deletePessoaSql1 = "DELETE FROM pessoa WHERE cod_pessoa = ?";
-                PreparedStatement deleteAlunoStatement = connection.prepareStatement(deletePessoaSql1);
-               deleteAlunoStatement.setInt(1, nomePessoa);
-               int pessoaRowsAffected = deleteAlunoStatement.executeUpdate();
-               System.out.println("Deletado " + pessoaRowsAffected + " informações na tabela.");
-            	}catch (SQLException e) {
-   				e.printStackTrace();
-   				System.out.println("Erro em acessar o banco de dados. Erro: " + e.getMessage());
-   						
-   			}
-            break;
-            default:
-            	System.out.print("Você quer deletar pelo código da pessoa ou pelo nome e sobrenome?(1: código / 2: nome)");
-            break;
-            }
-	}
+    public static void exibirPessoas() {
+    	
+        try {
+    	       Statement statement = Armazenamento.conn.createStatement();
+   	           ResultSet contar = statement.executeQuery("SELECT count(*) FROM pessoa");
+		
+
+               if(contar.getInt("contar")>0) {          
+               while (contar.next()) {
+            	   String nome = contar.getString("nome");
+                   String sobrenome = contar.getString("sobrenome");
+                   String email = contar.getString("email");
+                   String celular = contar.getString("celular");
+                   String endereco = contar.getString("endereco");
+
+                   System.out.println("Nome: " + nome);
+                   System.out.println("Sobrenome: " + sobrenome);
+                   System.out.println("Email: " + email);
+                   System.out.println("Celular: " + celular);
+                   System.out.println("Endereco: " + endereco);
+                   System.out.println();
+               }}else {
+            	   System.out.println("Nenhuma pessoa encontrado.");
+               }
+               }
+            catch (SQLException e) {
+           }
+    }
 
 }

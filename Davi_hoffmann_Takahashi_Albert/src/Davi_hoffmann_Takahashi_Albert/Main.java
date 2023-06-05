@@ -24,23 +24,32 @@ public class Main {
 
 	        switch (opcao) {
 	            case 1:
-	                Aluno.salvarAluno();
+	            	Aluno aluno = new Aluno();
+	            	aluno.cadastrar();
+	            	aluno.inserir();
 	                System.out.println("Aluno cadastrado.");
 	                break;
 	            case 2:
-	                Sala.cadastrarSala();
+	                Sala.cadastrar();
 	                System.out.println("Sala cadastrada.");
 	                break;
 	            case 3:
-	                cadastrarCurso();
+	            	Curso curso = new Curso();
+	            	curso.cadastrarCurso();
+	            	curso.Inserir();
 	                System.out.println("Curso cadastrado.");
 	                break;
 	            case 4:
+	            	Professor professor = new Professor();
+	            	professor.cadastrar();
+	            	professor.inserir();
 	            	Professor.cadastrarProfessor();
 	            	System.out.println("Professor cadastrado.");
 	                break;
 	            case 5:
-	                cadastrarTurma();
+	            	Turma turma = new Turma();
+	            	turma.cadastrarTurma();
+	            	turma.Inserir();
 	                System.out.println("Turma cadastrada.");
 	                break;
 	                case 6:
@@ -170,35 +179,35 @@ public class Main {
 	        switch (opcao) {
 	            case 1:
 	            	if(pesquisar==1) {
-	            		Armazenamento.exibirAlunos();
+	            		Aluno.exibir();
 	            	}else {
 	            		
 	            	}
 	                break;
 	            case 2:
 	            	if(pesquisar==1) {
-	            		Armazenamento.exibirSalas();
+	            		Sala.exibir();
 	            	}else {
 	            		
 	            	}
 	                break;
 	            case 3:
 	            	if(pesquisar==1) {
-	            		Armazenamento.exibirCursos();
+	            		Curso.exibir();
 	            	}else {
 	            		
 	            	}
 	                break;
 	            case 4:
 	            	if(pesquisar==1) {
-	            		Armazenamento.exibirProfessores();
+	            		Professor.exibir();
 	            	}else {
 	            		
 	            	}
 	                break;
 	            case 5:
 	            	if(pesquisar==1) {
-	            		Armazenamento.exibirTurmas();
+	            		Turma.exibir();
 	            	}else {
 	            		
 	            	}
@@ -228,42 +237,12 @@ public class Main {
 		salaAux.setNumero(numero);
 		salaAux.setBloco(bloco);
 	}
-	
-	private static void cadastrarCurso() {
-		System.out.println("Digite o nome do curso:");
-	    String nome = scanner.next();
-		System.out.println("Digite a capacidade do curso:");
-		int capacidade = scanner.nextInt();
-		System.out.println("Digite a descrição do curso:");
-		String descricao = scanner.next();
-		
-		Curso cursoAux = new Curso();
-		cursoAux.setNome(nome);
-		cursoAux.setCapacidade(capacidade);
-		cursoAux.setDescricao(descricao);
-	}
-	
-	private static void cadastrarTurma() {
-		System.out.println("Digite o curso da turma:");
-	    String curso = scanner.next();
-		System.out.println("Digite o núemro de alunos:");
-	    int numero = scanner.nextInt();
-		System.out.println("Digite o núemro da sala:");
-	    int sala = scanner.nextInt();
-	    System.out.println("Digite o núemro do bloco:");
-	    int bloco = scanner.nextInt();
-	    Turma alunoAux = new Turma();
-	    alunoAux.setCurso(curso);
-	    alunoAux.setNumero(numero);
-	    alunoAux.setNumero(sala);
-	    alunoAux.setNumero(bloco);
-	}
 
 	public static void main(String[] args) {
 		
 		int opcao=0;
 		
-		
+		Armazenamento.conecta();
 		while(opcao != 6) {
 		System.out.println("1 - cadastrar");
 		System.out.println("2 - editar");
