@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Aluno extends Pessoa {
 	private  int matricula_aluno;
 	private String curso_aluno;
-	private static ResultSet contar;
+	private static ResultSet contar, ver;
 	
 	static Scanner scanner = new Scanner(System.in);
 
@@ -127,7 +127,7 @@ public class Aluno extends Pessoa {
 	    	
 	        try {
 	        	super.inserir();
-	            String sqlAluno = "INSERT INTO aluno (curso) VALUES (?)";
+	            String sqlAluno = "INSERT INTO aluno (curso) VALUES (?,?)";
 	            PreparedStatement stmtAluno = Armazenamento.conn.prepareStatement(sqlAluno);
 	            stmtAluno.setString(1, curso_aluno);
 	            stmtAluno.executeUpdate();
@@ -141,6 +141,7 @@ public class Aluno extends Pessoa {
 	    }
 	    
 	    public void cadastrar() {
+	    	tipo=false;
 	    	super.cadastrar();
 			System.out.println("Digite o curso do aluno:");
 		    String curso = scanner.next();
@@ -149,6 +150,7 @@ public class Aluno extends Pessoa {
 		try {
 		    Statement statement = Armazenamento.conn.createStatement();
 	        contar = statement.executeQuery("SELECT count(cod_turma) FROM turma ");
+	        ver = statement.executeQuery("SELECT * FROM turma ");
 		    
 	        int count=0;
 	           for (; contar.next();) {
@@ -158,9 +160,9 @@ public class Aluno extends Pessoa {
 	           if(count>0) {
 	        	   System.out.println("Selecione a turma:");
 	        	   while(contar.next()) {
-	                   int cod_turma = contar.getInt("cod_turma");
-	                   int sala = contar.getInt("cod_curso");
-	                   int curso_turma = contar.getInt("cod_sala");
+	                   int cod_turma = ver.getInt("cod_turma");
+	                   int sala = ver.getInt("cod_curso");
+	                   int curso_turma = ver.getInt("cod_sala");
 
 	                   System.out.println("Código da turma: " + cod_turma);
 	                   System.out.println("Código do curso: " + curso_turma);
@@ -175,4 +177,14 @@ public class Aluno extends Pessoa {
             System.out.println("Erro: " + e.getMessage());
         }
 	    }
+
+		public static void editarAluno() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public static void apagar() {
+			// TODO Auto-generated method stub
+			
+		}
 }

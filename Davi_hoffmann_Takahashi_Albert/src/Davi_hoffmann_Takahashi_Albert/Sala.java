@@ -41,6 +41,21 @@ public class Sala {
         bloco_sala=bloco;
    }
     
+	public static void editarSala() {
+		System.out.println("Digite o nome da sala:");
+	    String nome = scanner.next();
+		System.out.println("Digite a capacidade da sala:");
+		int capacidade = scanner.nextInt();
+		System.out.println("Digite o número da sala:");
+		int numero = scanner.nextInt();
+		System.out.println("Digite o bloco da sala:");
+		String bloco = scanner.next();
+		setNome(nome);
+		setCapacidade(capacidade);
+		setNumero(numero);
+		setBloco(bloco);
+	}
+    
 	public static void exibir() {
         try {
  	       	Statement statement = Armazenamento.conn.createStatement();
@@ -110,5 +125,10 @@ public class Sala {
 		setCapacidade(capacidade);
 		setNumero(numero);
 		setBloco(bloco);
+	}
+
+	public static void apagar() {
+		// TODO Auto-generated method stub
+		
 	}
 }

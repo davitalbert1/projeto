@@ -85,11 +85,22 @@ public class Professor extends Pessoa{
 	    }
 	    
 		public static void cadastrarProfessor() {
+			tipo=true;
 			System.out.println("Digite o salario do professor:");
 		    Float salario = scanner.nextFloat();
 			System.out.println("Digite o curso do professor:");
 			String curso = scanner.next();
 		    setSalario(salario);
 		    setCargo(curso);
+		}
+
+		public static void editarProfessor() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public static void apagar() {
+			// TODO Auto-generated method stub
+			
 		}
 }

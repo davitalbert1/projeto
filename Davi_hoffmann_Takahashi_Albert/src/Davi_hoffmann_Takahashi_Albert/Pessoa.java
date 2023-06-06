@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Pessoa {
 	
@@ -14,7 +15,9 @@ public class Pessoa {
 	private String email_pessoa, cpf_pessoa, endereco_pessoa, celular_pessoa, sobrenome_pessoa;
 	private static String nome_pessoa;
 	private boolean is_professor_pessoa, is_aluno_pessoa;
+	protected static boolean tipo=false;
 	protected static Connection connection=null, conn=null;
+	protected static int cod_pessoa=0;
 	
 	static Scanner scanner = new Scanner(System.in);
 
@@ -67,7 +70,6 @@ public class Pessoa {
 			Statement statement = Armazenamento.conn.createStatement();
 			pessoa = statement.executeQuery("SELECT count(*) FROM pessoa");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return pessoa;
@@ -80,7 +82,6 @@ public class Pessoa {
 			ResultSet procurar_pessoa = statement.executeQuery("SELECT * FROM pessoa");
 			return procurar_pessoa;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -89,16 +90,32 @@ public class Pessoa {
     public void inserir() {
         
         try {
+        if(tipo==false) {
+            String sqlPessoa1 = "INSERT INTO pessoa (nome, celular, email, endereco, is_professor, is_aluno) VALUES (?,?,?, ?, ?, ?)";
+            PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1);
+            
+            stmtPessoa1.setString(1, nome_pessoa);
+            stmtPessoa1.setString(2, celular_pessoa);
+            stmtPessoa1.setString(3, email_pessoa);
+            stmtPessoa1.setString(4, endereco_pessoa);
+            stmtPessoa1.setBoolean(5, false);
+            stmtPessoa1.setBoolean(6, true);
+            stmtPessoa1.executeUpdate();
+            stmtPessoa1.close();
+        }else {
+        	String sqlPessoa1 = "INSERT INTO pessoa (nome, celular, email, endereco, is_professor, is_aluno) VALUES (?,?,?, ?, ?, ?)";
+            PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1);
+            
+            stmtPessoa1.setString(1, nome_pessoa);
+            stmtPessoa1.setString(2, celular_pessoa);
+            stmtPessoa1.setString(3, email_pessoa);
+            stmtPessoa1.setString(4, endereco_pessoa);
+            stmtPessoa1.setBoolean(5, true);
+            stmtPessoa1.setBoolean(6, false);
+            stmtPessoa1.executeUpdate();
+            stmtPessoa1.close();
+        }
         
-        String sqlPessoa1 = "INSERT INTO pessoa (nome, celular, email, endereco) VALUES (?, ?, ?, ?)";
-        PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1);
-        
-        stmtPessoa1.setString(1, nome_pessoa);
-        stmtPessoa1.setString(2, celular_pessoa);
-        stmtPessoa1.setString(3, email_pessoa);
-        stmtPessoa1.setString(4, endereco_pessoa);
-        stmtPessoa1.executeUpdate();
-        stmtPessoa1.close();
         Armazenamento.conn.close();
         
         } catch (SQLException e) {

@@ -75,25 +75,25 @@ public class Main {
 	        System.out.println("6 - Sair");
 	        opcao = scanner.nextInt();}
 
-	        /*switch (opcao) {
+	        switch (opcao) {
 	            case 1:
-	                editarAluno();
+	                Aluno.editarAluno();
 	                System.out.println("Aluno editado.");
 	                break;
 	            case 2:
-	                editarSala();
+	                Sala.editarSala();
 	                System.out.println("Sala editada.");
 	                break;
 	            case 3:
-	                editarCurso();
+	                Curso.editarCurso();
 	                System.out.println("Curso editado.");
 	                break;
 	            case 4:
-	            	editarProfessor();
+	            	Professor.editarProfessor();
 	            	System.out.println("Professor editado.");
 	                break;
 	            case 5:
-	                editarTurma();
+	                Turma.editarTurma();
 	                System.out.println("Turma editada.");
 	                break;
 	                case 6:
@@ -103,11 +103,10 @@ public class Main {
 	                System.out.println("Opção inválida. Digite novamente.");
 	                break;
 	                }
-	                }*/
-	}
+	                }
 	
 	private static void apagar() {
-		/*int opcao = 0;
+		int opcao = 0;
 
 	    while (opcao != 6) {
 	        System.out.println("Selecione uma opção:");
@@ -121,23 +120,23 @@ public class Main {
 
 	        switch (opcao) {
 	            case 1:
-	                apagarAluno();
+	                Aluno.apagar();
 	                System.out.println("Aluno apagado.");
 	                break;
 	            case 2:
-	                apagarSala();
+	                Sala.apagar();
 	                System.out.println("Sala apagada.");
 	                break;
 	            case 3:
-	                apagarCurso();
+	                Curso.apagar();
 	                System.out.println("Curso apagado.");
 	                break;
 	            case 4:
-	            	apagarProfessor();
+	            	Professor.apagar();
 	            	System.out.println("Professor apagado.");
 	                break;
 	            case 5:
-	                apagarTurma();
+	                Turma.apagar();
 	                System.out.println("Turma apagada.");
 	                break;
 	                case 6:
@@ -147,7 +146,7 @@ public class Main {
 	                System.out.println("Opção inválida. Digite novamente.");
 	                break;
 	                }
-	                }*/
+	                }
 	}
 	
 	private static void pesquisar() {
@@ -221,22 +220,7 @@ public class Main {
 	        }}
 	                }
 	
-	private static void editarSala() {
-		System.out.println("Digite o nome da sala:");
-	    String nome = scanner.next();
-		System.out.println("Digite a capacidade da sala:");
-		int capacidade = scanner.nextInt();
-		System.out.println("Digite o número da sala:");
-		int numero = scanner.nextInt();
-		System.out.println("Digite o bloco da sala:");
-		String bloco = scanner.next();
-		
-		Sala salaAux = new Sala();
-		salaAux.setNome(nome);
-		salaAux.setCapacidade(capacidade);
-		salaAux.setNumero(numero);
-		salaAux.setBloco(bloco);
-	}
+
 
 	public static void main(String[] args) {
 		

@@ -92,4 +92,14 @@ public void Inserir() {
 
 		setCurso(curso);
 	}
+
+	public static void editarTurma() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void apagar() {
+		// TODO Auto-generated method stub
+		
+	}
 }
