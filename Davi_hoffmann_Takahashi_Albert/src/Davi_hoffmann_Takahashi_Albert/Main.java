@@ -1,6 +1,5 @@
 package Davi_hoffmann_Takahashi_Albert;
-import java.util.Date;
-import java.util.*;
+import java.util.Scanner;
 
 
 
@@ -26,11 +25,12 @@ public class Main {
 	            case 1:
 	            	Aluno aluno = new Aluno();
 	            	aluno.cadastrar();
-	            	aluno.inserir();
 	                System.out.println("Aluno cadastrado.");
 	                break;
 	            case 2:
-	                Sala.cadastrar();
+	            	Sala sala = new Sala();
+	            	Sala.cadastrar();
+	            	sala.inserir();
 	                System.out.println("Sala cadastrada.");
 	                break;
 	            case 3:
@@ -42,8 +42,6 @@ public class Main {
 	            case 4:
 	            	Professor professor = new Professor();
 	            	professor.cadastrar();
-	            	professor.inserir();
-	            	Professor.cadastrarProfessor();
 	            	System.out.println("Professor cadastrado.");
 	                break;
 	            case 5:
@@ -124,7 +122,7 @@ public class Main {
 	                System.out.println("Aluno apagado.");
 	                break;
 	            case 2:
-	                Sala.apagar();
+	                Sala.deletar();
 	                System.out.println("Sala apagada.");
 	                break;
 	            case 3:
@@ -155,7 +153,7 @@ public class Main {
         System.out.println("2 - Pesquisar");
         pesquisar = scanner.nextInt();
         if(pesquisar!=1 && pesquisar !=2) {
-        	System.out.println("Opção inexistente, selecione outra opção");
+        	System.out.println("Opção inexistente, selecione outra opção.");
         	pesquisar();
         }
 	}
@@ -180,35 +178,35 @@ public class Main {
 	            	if(pesquisar==1) {
 	            		Aluno.exibir();
 	            	}else {
-	            		
+	            		Aluno.pesquisar();
 	            	}
 	                break;
 	            case 2:
 	            	if(pesquisar==1) {
 	            		Sala.exibir();
 	            	}else {
-	            		
+	            		Sala.pesquisar();
 	            	}
 	                break;
 	            case 3:
 	            	if(pesquisar==1) {
 	            		Curso.exibir();
 	            	}else {
-	            		
+	            		Curso.pesquisar();
 	            	}
 	                break;
 	            case 4:
 	            	if(pesquisar==1) {
 	            		Professor.exibir();
 	            	}else {
-	            		
+	            		Professor.pesquisar();
 	            	}
 	                break;
 	            case 5:
 	            	if(pesquisar==1) {
 	            		Turma.exibir();
 	            	}else {
-	            		
+	            		Turma.pesquisar();
 	            	}
 	                break;
 	                case 6:
@@ -220,13 +218,8 @@ public class Main {
 	        }}
 	                }
 	
-
-
-	public static void main(String[] args) {
-		
+	private static void inicio() {
 		int opcao=0;
-		
-		Armazenamento.conecta();
 		while(opcao != 6) {
 		System.out.println("1 - cadastrar");
 		System.out.println("2 - editar");
@@ -249,7 +242,15 @@ public class Main {
 		break;
 		default:
 		System.out.println("1 - Opção inválida, digite outra opção.");
-		break;}
+		break;
+		}
 		}
 	    }
+	
+
+
+	public static void main(String[] args) {
+		Armazenamento.conecta();
+		inicio();
+	}
 }

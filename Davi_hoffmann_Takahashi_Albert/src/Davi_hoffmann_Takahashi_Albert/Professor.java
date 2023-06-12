@@ -25,7 +25,7 @@ public class Professor extends Pessoa{
 		public static void exibir() {
 	        try {
 	 	       	Statement statement = Armazenamento.conn.createStatement();
-	 	       ResultSet pessoa = Pessoa.getPesquisa();
+	 	       ResultSet pessoa = Pessoa.getPessoa();
 	 	      ResultSet procurar_pessoa = Pessoa.getPessoa();
 	 	       
 	           ResultSet professor = statement.executeQuery("SELECT count(*) FROM professor");
@@ -64,27 +64,74 @@ public class Professor extends Pessoa{
 	        }
 
 		}
+		
+		public static ResultSet pesquisar() {
+			try{
+				System.out.println("Qual o nome da pessoa?");
+	            String nomeAluno = scanner.next();
+
+	            String sql = "SELECT * FROM pessoa WHERE nome = '" + nomeAluno + "'";
+
+	            Statement statement = Armazenamento.conn.createStatement();
+	            ResultSet resultSet = statement.executeQuery(sql);
+
+	            if (resultSet.next()) {
+	                int id = resultSet.getInt("id");
+	                String nome = resultSet.getString("nome");
+	                String cpf = resultSet.getString("cpf");
+	                String curso = resultSet.getString("curso");
+	                String turma = resultSet.getString("turma");
+	                String sala = resultSet.getString("sala");
+
+	                System.out.println("Aluno encontrado:");
+	                System.out.println("ID: " + id);
+	                System.out.println("Nome: " + nome);
+	                System.out.println("CPF: " + cpf);
+	                System.out.println("Curso: " + curso);
+	                System.out.println("Turma: " + turma);
+	                System.out.println("Sala: " + sala);
+	            } else {
+	                System.out.println("Aluno não encontrado.");
+	            }
+
+	        } catch (SQLException e) {
+	            System.out.println("Erro ao pesquisar aluno: " + e.getMessage());
+	        }
+			return null;
+
+		}
 	    
-	    public void inserir() {
+	    public int inserir() {
+	    	int id;
 	        
 	        try {
-	        
-	        String sqlPessoa1 = "INSERT INTO professor (curso, salario) VALUES (?, ?)";
-	        PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1);
+	        int idPessoa = super.inserir();
+	        String sqlPessoa1 = "INSERT INTO professor (curso, salario, cod_pessoa) VALUES (?, ?, ?)";
+	        PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1, Statement.RETURN_GENERATED_KEYS);
 	        
 	        stmtPessoa1.setString(1, curso_professor);
 	        stmtPessoa1.setFloat(2, salario_professor);
+	        stmtPessoa1.setFloat(3, idPessoa);
 	        stmtPessoa1.executeUpdate();
 	        
 	        stmtPessoa1.close();
-	        Armazenamento.conn.close();
+	        
+	        String sqlPessoa = "INSERT INTO professor_curso (cod_professor) VALUES (?)";
+	        PreparedStatement stmtPessoa = Armazenamento.conn.prepareStatement(sqlPessoa);
+	        ResultSet generatedKeys = stmtPessoa1.getGeneratedKeys();
+	        if (generatedKeys.next()) {
+	        int lastInsertId = generatedKeys.getInt(1);
+	        id = lastInsertId;
+	        }
 	        
 	        } catch (SQLException e) {
 	        System.out.println("Erro ao salvar os dados da pessoa no banco de dados: " + e.getMessage());
 	        }
+			return 0;
 	    }
 	    
-		public static void cadastrarProfessor() {
+		public void cadastrar() {
+			super.cadastrar();
 			tipo=true;
 			System.out.println("Digite o salario do professor:");
 		    Float salario = scanner.nextFloat();
@@ -92,6 +139,7 @@ public class Professor extends Pessoa{
 			String curso = scanner.next();
 		    setSalario(salario);
 		    setCargo(curso);
+		    inserir();
 		}
 
 		public static void editarProfessor() {
