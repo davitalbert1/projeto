@@ -6,7 +6,11 @@ import java.sql.Statement;
 import java.util.*;
 
 class Turma{
-    public int cod_sala, cod_curso, numero=0;
+    public static int count=0;
+	public int cod_sala;
+	public int cod_curso;
+	public int numero=0;
+    public static int capacidade;
     
     static Scanner scanner = new Scanner(System.in);
 
@@ -31,6 +35,31 @@ class Turma{
     
     public void setNumero(int numero) {
     	this.numero=numero;
+    }
+    
+    public static void tamanho(int cod) {
+		try {
+			Statement statement = Armazenamento.conn.createStatement();
+	    	ResultSet procurar_pessoa = statement.executeQuery("SELECT * FROM turma WHERE cod_turma = " + cod);
+	    	capacidade = procurar_pessoa.getInt("capacidade");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	alunos(cod);
+    }
+    
+    public static void alunos(int cod) {
+		try {
+			Statement statement = Armazenamento.conn.createStatement();
+	    	ResultSet procurar_pessoa = statement.executeQuery("SELECT count(*) FROM aluno WHERE cod_turma = " + cod);
+            if (procurar_pessoa.next()) {
+                count = procurar_pessoa.getInt(1);
+            }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
 
     

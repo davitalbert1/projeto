@@ -15,9 +15,8 @@ public class Pessoa {
 	protected String cpf;
 	protected boolean tipo=false;
 	protected Connection conn=null;
-	protected int id;
+	protected int id, cod, lastInsertId;
 	protected static int cod_pessoa=0;
-	public int lastInsertId;
 	
 		static Scanner scanner = new Scanner(System.in);
 
@@ -144,9 +143,10 @@ public class Pessoa {
     public void exibir() {
     	
         try {
+        		Aluno aluno = new Aluno ();
+        		int cod = aluno.cod;
     	       Statement statement = Armazenamento.conn.createStatement();
-   	           ResultSet contar = statement.executeQuery("SELECT * FROM pessoa");   
-               while (contar.next()) {
+   	           ResultSet contar = statement.executeQuery("SELECT * FROM pessoa WHERE cod_pessoa = "+cod);   
             	   String nome = contar.getString("nome");
                    String sobrenome = contar.getString("sobrenome");
                    String email = contar.getString("email");
@@ -161,7 +161,6 @@ public class Pessoa {
                    System.out.println("Endereco: " + endereco);
                    System.out.println("CPF: " + cpf);
                    System.out.println();
-               }
                }
             catch (SQLException e) {
            }

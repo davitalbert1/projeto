@@ -7,7 +7,10 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Aluno extends Pessoa {
-    private int codPessoa, cod, matricula_aluno, numero_alunos;
+    private int codPessoa;
+	int cod;
+	private int matricula_aluno;
+	private int numero_alunos;
     private int cod_turma, curso_aluno;
 
     static Scanner scanner = new Scanner(System.in);
@@ -38,9 +41,10 @@ public class Aluno extends Pessoa {
                     pessoa.exibir();
                     int cod_turma = procurar_aluno.getInt("cod_turma");
                     int matricula = procurar_aluno.getInt("matricula");
+                    cod = procurar_aluno.getInt("cod_pessoa");
                     String curso = procurar_aluno.getString("curso");
 
-                    System.out.println("Código do aluno: " + matricula);
+                    System.out.println("Código da pessoa: " + cod);
                     System.out.println("Código da turma: " + cod_turma);
                     System.out.println("Matricula do aluno: " + matricula);
                     System.out.println("Curso do aluno: " + curso);
@@ -110,14 +114,25 @@ public class Aluno extends Pessoa {
     public void cadastrar() {
         try {
             tipo = false;
-            super.cadastrar();
-            System.out.println("Digite o código do curso do aluno:");
-            int curso = scanner.nextInt();
             System.out.println("Em qual turma você quer adicionar?");
             int turma = scanner.nextInt();
-            setCurso(curso);
-            setTurma(turma);
-            inserir();
+            
+            Turma.tamanho(turma);
+            int tamanho = Turma.capacidade;
+            int numero = Turma.count;
+            
+            if(numero<=tamanho) {
+            	System.out.println("Digite o código do curso do aluno:");
+            	int curso = scanner.nextInt();	
+            	super.cadastrar();
+            	setCurso(curso);
+            	setTurma(turma);
+            	inserir();
+            }else {
+            	System.out.println("Capacidade máxima da turma alcançada, não foi possivel adicionar o aluno.");
+            	Main.main(null);
+            }
+            
 
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
