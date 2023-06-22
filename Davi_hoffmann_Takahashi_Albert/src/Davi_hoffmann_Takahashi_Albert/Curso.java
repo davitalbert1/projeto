@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 class Curso {
-	private static String nome_curso, descricao_curso, sql;
-    private static int carga_horaria;
+	private static String nome_curso, descricao_curso;
+    private static int carga_horaria, cod_curso;
     private static boolean ativo;
     
     static Scanner scanner = new Scanner(System.in);
@@ -62,11 +62,20 @@ class Curso {
                 String nome = ver.getString("nome_curso");
                 int descricao = ver.getInt("descricao_curso");
                 int carga = ver.getInt("carga_horaria");
+                boolean ativo = ver.getBoolean("ativo");
+                
+                String reposta;
+                if (ativo==true) {
+                	reposta = "ativo";
+                }else {
+                	reposta = "inativo";
+                }
 
                 System.out.println("Código do curso: " + cod);
                 System.out.println("Nome do curso: " + nome);
                 System.out.println("Descrição do curso: " + descricao);
                 System.out.println("Carga horária do curso: " + carga);
+                System.out.println("Status do curso: " + reposta);
                 System.out.println();
                 
             }}else {
@@ -79,7 +88,7 @@ class Curso {
 
 	}
 	
-	public static void deletar(){
+	public void deletar(){
 			
 			try {
                 System.out.print("Insira o código do curso para deletar: ");
@@ -95,34 +104,27 @@ class Curso {
             	}
 }
 	
-	public static ResultSet pesquisar() {
+	public int pesquisar() {
 		try{
-			System.out.println("Qual o nome do curso?");
-            String nomeAluno = scanner.next();
+			System.out.println("Digite o id do curso.");
+			cod_curso = scanner.nextInt();
+			Statement statement = Armazenamento.conn.createStatement();
+            
+			ResultSet procurar_pessoa = statement.executeQuery("SELECT * FROM curso WHERE cod_curso = "+ cod_curso);
 
-            String sql = "SELECT * FROM aluno WHERE nome = '" + nomeAluno + "'";
-
-            Statement statement = Armazenamento.conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            if (resultSet.next()) {
-                int id = resultSet.getInt("cod_curso");
-                String nome = resultSet.getString("nome");
-                String descricao = resultSet.getString("descricao");
-                int carga_horaria = resultSet.getInt("carga_horaria");
-                boolean ativo = resultSet.getBoolean("ativo");
+            if (procurar_pessoa.next()) {
+            	String nome = procurar_pessoa.getString("nome");
+                String descricao  = procurar_pessoa.getString("descricao");
+                int carga_horaria  = procurar_pessoa.getInt("carga_horaria");
+                cod_curso  = procurar_pessoa.getInt("cod_curso");
+                boolean ativo  = procurar_pessoa.getBoolean("ativo");
 
                 System.out.println("Curso encontrado:");
-                System.out.println("ID: " + id);
+                System.out.println("ID: " + cod_curso);
                 System.out.println("Nome: " + nome);
-                System.out.println("CPF: " + descricao);
+                System.out.println("Descricao: " + descricao);
                 System.out.println("Carga horaria: " + carga_horaria);
-                
-                if(ativo==false) {
-                	System.out.println("Ativo: Não");
-                }else {
-                	System.out.println("Ativo: Sim");
-                }
+                System.out.println("Ativo: " + ativo);
             } else {
                 System.out.println("Curso não encontrado.");
             }
@@ -130,7 +132,7 @@ class Curso {
         } catch (SQLException e) {
             System.out.println("Erro ao pesquisar curso: " + e.getMessage());
         }
-		return null;
+		return 0;
 
 	}
 	
@@ -138,8 +140,8 @@ class Curso {
 	    boolean opcao = false;
 	    int ativo = 0;
 
-	    while (ativo == 0) {
-	        System.out.println("Você quer ver os cursos ativos ou não ativos?");
+	    while (ativo !=1 && ativo !=2) {
+	        System.out.println("Você quer ver os cursos ativos ou não ativos?(1:sim / 2: não)");
 	        ativo = scanner.nextInt();
 
 	        switch (ativo) {
@@ -156,8 +158,6 @@ class Curso {
 	    }
 
 	    try {
-	    	System.out.println("Digite o código do curso:");
-	    	int cod_curso = scanner.nextInt();
 	        Statement statement = Armazenamento.conn.createStatement();
 	        ResultSet contar = statement.executeQuery("SELECT count(*) FROM curso");
 	        int count = 0;
@@ -167,9 +167,9 @@ class Curso {
 	        }
 
 	        if (count > 0) {
-	            String query = "SELECT * FROM curso WHERE cod_curso = ?";
+	            String query = "SELECT * FROM curso WHERE ativo = ?";
 	            PreparedStatement statement1 = Armazenamento.conn.prepareStatement(query);
-	            statement1.setInt(1, cod_curso);
+	            statement1.setBoolean(1, opcao);
 	            ResultSet resultSet = statement1.executeQuery();
 
 	            while (resultSet.next()) {
@@ -245,12 +245,74 @@ class Curso {
 	}
 
 	public static void editarCurso() {
-		// TODO Auto-generated method stub
-		
-	}
+		 try {
+	            System.out.print("Insira o código do curso: ");
+	            int id = scanner.nextInt();
 
-	public static void apagar() {
-		// TODO Auto-generated method stub
+	            Statement statement = Armazenamento.conn.createStatement();
+	            ResultSet contar = statement.executeQuery("SELECT count(*) FROM curso WHERE cod_curso = " + id);
+
+	            int count = 0;
+	            if (contar.next()) {
+	                count = contar.getInt(1);
+	            }
+
+	            if (count > 0) {
+
+	                System.out.print("Insira o nome para editar: ");
+	                String nome = scanner.next();
+	                System.out.print("Insira a descrição do curso para editar: ");
+	                String descricao = scanner.next();
+	                System.out.print("Insira a carga horária do curso para editar: ");
+	                int carga = scanner.nextInt();
+	                
+	                int ativo=0;
+	                boolean opcao = false;
+	                do {
+	                System.out.print("Insira se o curso está ativo para editar (0:não / 1:sim): ");
+	                ativo = scanner.nextInt();
+	                
+	                switch(ativo) {
+	                case 0:
+	                	opcao = false;
+	                break;
+	                case 1:
+	                	opcao = true;
+		            break;
+		            default:
+		            	System.out.print("Opção inválida, selecione outra.");
+		            break;
+	                }}while(ativo!=1 && ativo !=0);
+
+	                String editar_curso = "UPDATE curso SET nome = ? WHERE cod_curso = ?";
+	                PreparedStatement editar = Armazenamento.conn.prepareStatement(editar_curso);
+	                editar.setString(1, nome);
+	                editar.setInt(2, id);
+	                editar.executeUpdate();
+
+	                String editar_descricao = "UPDATE curso SET descricao = ? WHERE cod_curso = ?";
+	                PreparedStatement editar_D = Armazenamento.conn.prepareStatement(editar_descricao);
+	                editar_D.setString(1, descricao);
+	                editar_D.setInt(2, id);
+	                editar_D.executeUpdate();
+	                
+	                String editar_carga = "UPDATE curso SET carga_horaria = ? WHERE cod_curso = ?";
+	                PreparedStatement editar_C = Armazenamento.conn.prepareStatement(editar_carga);
+	                editar_C.setInt(1, carga);
+	                editar_C.setInt(2, id);
+	                editar_C.executeUpdate();
+	                
+	                String editar_ativo = "UPDATE curso SET ativo = ? WHERE cod_curso = ?";
+	                PreparedStatement editar_A = Armazenamento.conn.prepareStatement(editar_ativo);
+	                editar_A.setBoolean(1, opcao);
+	                editar_A.setInt(2, id);
+	                editar_A.executeUpdate();
+	            } else {
+	                System.out.println("Nenhum aluno encontrado.");
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 		
 	}
 }

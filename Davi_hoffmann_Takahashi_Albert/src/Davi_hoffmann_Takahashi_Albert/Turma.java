@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.*;
 
 class Turma{
-    public int cod_sala, cod_curso;
+    public int cod_sala, cod_curso, numero=0;
     
     static Scanner scanner = new Scanner(System.in);
 
@@ -28,34 +28,46 @@ class Turma{
     public void setSala(int cod_sala) {
     	this.cod_sala=cod_sala;
     }
+    
+    public void setNumero(int numero) {
+    	this.numero=numero;
+    }
 
     
 	public static void exibir() {
         try {
- 	       	Statement statement = Armazenamento.conn.createStatement();
-	           ResultSet contar = statement.executeQuery("SELECT count(*) FROM turma");
-	           ResultSet ver = statement.executeQuery("SELECT * FROM turma");
-	           int count=0;
-	           for (; contar.next();) {
-	        	   count = contar.getInt(1);
-	            }
+	        Statement statementTurmas = Armazenamento.conn.createStatement();
+	        Statement statementNumeroAlunos = Armazenamento.conn.createStatement();
 
-         if (count>0) {
-        	 
-            while (contar.next()) {
+        	ResultSet ver = statementTurmas.executeQuery("SELECT * FROM turma");
+	        boolean mostrouTurmas = false;
+	        
+	        
+            while (ver.next()) {
+            	mostrouTurmas = true;
                 int cod_turma = ver.getInt("cod_turma");
-                String numero_alunos = ver.getString("numero_alunos");
                 int curso = ver.getInt("cod_curso");
                 int cod_sala = ver.getInt("cod_sala");
+                ResultSet numero = statementNumeroAlunos.executeQuery("SELECT count(*) FROM aluno WHERE cod_turma = "+ cod_turma);
 
+ 	           int countAlunos=0;
+ 	           for (; numero.next();) {
+ 	        	  countAlunos = numero.getInt(1);
+ 	            }
+               
+ 	            System.out.println("--------------------------");
                 System.out.println("Código da turma: " + cod_turma);
-                System.out.println("Cargo do professor: " + numero_alunos);
                 System.out.println("Código do curso: " + curso);
                 System.out.println("Código da sala: " + cod_sala);
+                System.out.println("Número de alunos: " + countAlunos);
+                System.out.println("--------------------------");
+                
                 System.out.println();
                 
-            }}else {
-            	System.out.println("Nenhuma turma encontrada.");
+            }
+            
+            if(!mostrouTurmas) {
+            	System.out.println("** Nenhuma turma encontrada **");
             }
             
         } catch (SQLException e) {
@@ -76,13 +88,11 @@ class Turma{
 
             if (resultSet.next()) {
                 int id = resultSet.getInt("cod_turma");
-                String numero_alunos = resultSet.getString("numero_alunos");
                 String cod_curso = resultSet.getString("cod_curso");
                 String cod_sala = resultSet.getString("cod_sala");
 
                 System.out.println("Turma encontrada:");
                 System.out.println("ID: " + id);
-                System.out.println("Numero de alunos: " + numero_alunos);
                 System.out.println("Código do curso: " + cod_curso);
                 System.out.println("Código da sala: " + cod_sala);
             } else {
@@ -100,12 +110,11 @@ public void Inserir() {
         
         try {
         
-        String sqlPessoa1 = "INSERT INTO turma ( cod_curso, cod_sala, numero_alunos) VALUES (?,?,?)";
+        String sqlPessoa1 = "INSERT INTO turma ( cod_curso, cod_sala) VALUES (?,?)";
         PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1);
         
         stmtPessoa1.setInt(1, cod_curso);
         stmtPessoa1.setInt(2, cod_sala);
-        stmtPessoa1.setInt(3, 0);
         stmtPessoa1.executeUpdate();
         stmtPessoa1.close();
         Armazenamento.conn.close();
@@ -125,12 +134,53 @@ public void Inserir() {
 	}
 
 	public static void editarTurma() {
-		// TODO Auto-generated method stub
-		
-	}
+		 try {
+	            System.out.print("Insira o código da turma: ");
+	            int id = scanner.nextInt();
 
-	public static void apagar() {
-		// TODO Auto-generated method stub
+	            Statement statement = Armazenamento.conn.createStatement();
+	            ResultSet contar = statement.executeQuery("SELECT count(*) FROM turma WHERE cod_turma = " + id);
+
+	            int count = 0;
+	            if (contar.next()) {
+	                count = contar.getInt(1);
+	            }
+
+	            if (count > 0) {
+	                System.out.print("Insira o código do curso para editar: ");
+	                int curso = scanner.nextInt();
+	                System.out.print("Insira o código da sala para editar: ");
+	                int sala = scanner.nextInt();
+
+	                String editar_curso = "UPDATE turma SET cod_curso = ?, cod_sala=? WHERE cod_turma = ?";
+	                PreparedStatement editar = Armazenamento.conn.prepareStatement(editar_curso);
+	                editar.setInt(1, curso);
+	                editar.setInt(2, sala);
+	                editar.setInt(3, id);
+	                editar.executeUpdate();
+	            } else {
+	                System.out.println("** Turma não encontrada. **");
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 		
 	}
+	
+	public void deletar(){
+		
+    	try {
+        System.out.print("Insira o código da turma para deletar: ");
+        int codPessoa = scanner.nextInt();
+        String deletePessoaSql = "DELETE FROM turma WHERE cod_turma = ?";
+        PreparedStatement deletePessoaStatement = Armazenamento.conn.prepareStatement(deletePessoaSql);
+        deletePessoaStatement.setInt(1, codPessoa);
+        int pessoaRowsAffected = deletePessoaStatement.executeUpdate();
+        System.out.println("Deletado " + pessoaRowsAffected + " informações na tabela.");
+    	}catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Erro em apagar a turma do banco de dados. Erro: " + e.getMessage());
+					
+		}
+}
 }

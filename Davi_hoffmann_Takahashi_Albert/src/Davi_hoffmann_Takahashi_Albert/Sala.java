@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class Sala {
 	
-	public static String nome_sala, sql, curso_sala, dia_sala, local_sala;
-    public static int capacidade_sala, numero_sala, id;
+	public static String nome_sala, sql, dia_sala, local_sala;
+    public static int capacidade_sala, numero_sala, cod_sala, cod_curso;
     private static ResultSet resultSet;
     
     static Scanner scanner = new Scanner(System.in);
@@ -34,24 +34,29 @@ public class Sala {
          capacidade_sala=capacidade;
     }
     
-    public static void setCurso(String curso) {
-    	curso_sala=curso;
-   }
-    
     public static void setLocal(String local) {
     	local_sala=local;
+   }
+    public static void setDia(String dia_semana) {
+    	dia_sala=dia_semana;
+   }
+    
+    public static void setCurso(int curso) {
+    	cod_curso=curso;
    }
     
     public void inserir() {
         
         try {
         
-        String sqlPessoa1 = "INSERT INTO Sala (nome, local_sala, capacidade) VALUES (?,?, ?)";
+        String sqlPessoa1 = "INSERT INTO Sala (nome, local_sala, capacidade, dia_semana, cod_curso) VALUES (?,?,?,?, ?)";
         PreparedStatement stmtPessoa1 = Armazenamento.conn.prepareStatement(sqlPessoa1);
         
         stmtPessoa1.setString(1, nome_sala);
         stmtPessoa1.setString(2, local_sala);
         stmtPessoa1.setInt(3, capacidade_sala);
+        stmtPessoa1.setString(4, dia_sala);
+        stmtPessoa1.setInt(5, cod_curso);
         stmtPessoa1.executeUpdate();
         stmtPessoa1.close();
         
@@ -67,52 +72,56 @@ public class Sala {
 		int capacidade = scanner.nextInt();
 		System.out.println("Digite o local da sala:");
 	    String local = scanner.next();
+		System.out.println("Digite o dia da semana da sala:");
+	    String dia_semana = scanner.next();
+	    System.out.println("Digite o código do curso da sala:");
+	    int curso = scanner.nextInt();
 		
 		setNome(nome);
 		setCapacidade(capacidade);
+		setDia(dia_semana);
 		setLocal(local);
+		setCurso(curso);
 	}
     
 	public static void editarSala() {
 		exibir();
 		System.out.println("Escolha o id de qual sala você quer:");
-		id = scanner.nextInt();
-		String sql = "SELECT * FROM sala WHERE cod_sala = '" + id + "'";
-        Statement statement;
+		cod_sala = scanner.nextInt();
+        System.out.print("Insira o código curso do professor para editar: ");
+        int cod_curso = scanner.nextInt();
+        System.out.print("Insira o dia da semana para editar: ");
+        String dia_semana = scanner.next();
+        System.out.print("Insira a capacidade para editar: ");
+        int capacidade = scanner.nextInt();
+        System.out.print("Insira o nome para editar: ");
+        String nome = scanner.next();
+        System.out.print("Insira o localda sala para editar: ");
+        String local_sala = scanner.next();
+
 		try {
-			statement = Armazenamento.conn.createStatement();
-			resultSet = statement.executeQuery(sql);
+			String editar_curso = "UPDATE sala SET cod_curso = ?, dia_semana=?, local_sala=?, capacidade=?, nome=? WHERE cod_sala = ?";
+			PreparedStatement editar = Armazenamento.conn.prepareStatement(editar_curso);
+	        editar.setInt(1, cod_curso);
+	        editar.setString(2, dia_semana);
+	        editar.setString(3, local_sala);
+	        editar.setInt(4, capacidade);
+	        editar.setString(5, nome);
+	        editar.setInt(3, cod_sala);
+	        editar.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println(resultSet);
-		
-		System.out.println("Digite o nome da sala:");
-	    String nome = scanner.next();
-		System.out.println("Digite a capacidade da sala:");
-		int capacidade = scanner.nextInt();
-		System.out.println("Digite o local da sala:");
-		String local = scanner.next();
-		
-		setNome(nome);
-		setCapacidade(capacidade);
-		setLocal(local);
+
 	}
 	
-	public static void deletar(){
-		System.out.print("Você quer deletar pelo código da sala ou pelo nome?(1: código / 2: nome)");
-		int opcao = scanner.nextInt();
-            
-		while(opcao!=1 || opcao!=2) {
-            switch(opcao) {
-            
-            case 1:
+	public void deletar(){
+		
             	try {
                 System.out.print("Insira o código da sala para deletar: ");
                 int codPessoa = scanner.nextInt();
-                String deletePessoaSql = "DELETE FROM sala WHERE cod_curso = ?";
+                String deletePessoaSql = "DELETE FROM sala WHERE cod_sala = ?";
                 PreparedStatement deletePessoaStatement = Armazenamento.conn.prepareStatement(deletePessoaSql);
                 deletePessoaStatement.setInt(1, codPessoa);
                 int pessoaRowsAffected = deletePessoaStatement.executeUpdate();
@@ -122,26 +131,6 @@ public class Sala {
     				System.out.println("Erro em acessar o banco de dados. Erro: " + e.getMessage());
     						
     			}
-            break;
-            case 2:
-            	try {
-            	System.out.print("Insira o código da sala para deletar: ");
-                int nomePessoa = scanner.nextInt();
-            	String deletePessoaSql1 = "DELETE FROM sala WHERE nome = ?";
-                PreparedStatement deleteAlunoStatement = Armazenamento.conn.prepareStatement(deletePessoaSql1);
-               deleteAlunoStatement.setInt(1, nomePessoa);
-               int pessoaRowsAffected = deleteAlunoStatement.executeUpdate();
-               System.out.println("Deletado " + pessoaRowsAffected + " informações na tabela.");
-            	}catch (SQLException e) {
-   				e.printStackTrace();
-   				System.out.println("Erro em acessar o banco de dados. Erro: " + e.getMessage());
-   						
-   			}
-            break;
-            default:
-            	System.out.print("Você quer deletar pelo código da pessoa ou pelo nome e sobrenome?(1: código / 2: nome)");
-            break;
-            }}
 	}
     
 	public static void exibir() {
@@ -160,14 +149,12 @@ public class Sala {
                 int cod= ver.getInt("cod_sala");
                 String nome = ver.getString("nome");
                 int capacidade = ver.getInt("capacidade");
-                int numero_sala = ver.getInt("numero");
-                int bloco_sala = ver.getInt("bloco");
+                int local = ver.getInt("local");
 
                 System.out.println("Código da sala: " + cod);
                 System.out.println("Nome da sala: " + nome);
                 System.out.println("Capacidade da sala: " + capacidade);
-                System.out.println("Número da sala: " + numero_sala);
-                System.out.println("Bloco da sala: " + bloco_sala);
+                System.out.println("Número da sala: " + local);
                 System.out.println();
                 
             }}else {
@@ -180,41 +167,34 @@ public class Sala {
 
 	}
 	
-	public static ResultSet pesquisar() {
+	public int pesquisar() {
 		try{
-			System.out.println("Qual o nome da sala?");
-            String nomeAluno = scanner.next();
+			System.out.println("Digite o id da sala.");
+			cod_sala = scanner.nextInt();
+			
+			Statement statement = Armazenamento.conn.createStatement();
+			ResultSet procurar_pessoa = statement.executeQuery("SELECT * FROM sala WHERE cod_sala = "+ cod_sala);
 
-            String sql = "SELECT * FROM sala WHERE nome = '" + nomeAluno + "'";
-
-            Statement statement = Armazenamento.conn.createStatement();
-            resultSet = statement.executeQuery(sql);
-
-            if (resultSet.next()) {
-                int id = resultSet.getInt("cod_sala");
-                String nome = resultSet.getString("nome");
-                String capacidade = resultSet.getString("capacidade");
-                String curso = resultSet.getString("curso");
-                String local_sala = resultSet.getString("local_sala");
-                String dia_semana = resultSet.getString("dia_semana");
-                String local = resultSet.getString("local");
+            if (procurar_pessoa.next()) {
+                int capacidade = procurar_pessoa.getInt("capacidade");
+                String local  = procurar_pessoa.getString("local_sala");
+                String nome  = procurar_pessoa.getString("nome");
+                String dia_semana  = procurar_pessoa.getString("dia_semana");
 
                 System.out.println("Sala encontrada:");
-                System.out.println("ID: " + id);
+                System.out.println("ID: " + cod_sala);
                 System.out.println("Nome: " + nome);
-                System.out.println("capacidade: " + capacidade);
-                System.out.println("Curso: " + curso);
+                System.out.println("Capacidade: " + capacidade);
                 System.out.println("Local: " + local);
-                System.out.println("Local da sala: " + local_sala);
-                System.out.println("Dia dasemana: " + dia_semana);
+                System.out.println("Dia da semana: " + dia_semana);
             } else {
-                System.out.println("Sala não encontrada.");
+                System.out.println("Sala não encontrado.");
             }
 
         } catch (SQLException e) {
             System.out.println("Erro ao pesquisar sala: " + e.getMessage());
         }
-		return null;
+		return 0;
 
 	}
 }

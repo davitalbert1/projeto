@@ -11,6 +11,7 @@ import java.util.List;
 public class Professor extends Pessoa{
 		private static String curso_professor;
 		private static float salario_professor;
+		public int cod_professor, cod_pessoa, cod;
 
 	    public Professor() {}
 	    
@@ -22,38 +23,28 @@ public class Professor extends Pessoa{
 	    	curso_professor=curso;
 	    }
 	    
-		public static void exibir() {
+		public void exibir() {
 	        try {
-	 	       	Statement statement = Armazenamento.conn.createStatement();
-	 	       ResultSet pessoa = Pessoa.getPessoa();
-	 	      ResultSet procurar_pessoa = Pessoa.getPessoa();
+	        	Pessoa pessoa = new Pessoa();
+				pessoa.exibir();
+	        	Statement statement = Armazenamento.conn.createStatement();
 	 	       
 	           ResultSet professor = statement.executeQuery("SELECT count(*) FROM professor");
-	           ResultSet procurar_professor = statement.executeQuery("SELECT * FROM professor");
 		           int count=0;
-		           for (; pessoa.next();) {
-		        	   count = pessoa.getInt(1);
+		           for (; professor.next();) {
+		        	   count = professor.getInt(1);
 		            }
 
 	         if (count>0) {
-	        	 
-	            while (pessoa.next()) {
-	            	int cod_pessoa= procurar_pessoa.getInt("cod_pessoa");
-	                int cod_professor= procurar_professor.getInt("cod_professor");
-	                String curso= procurar_professor.getString("cod_professor");
-	                String nome = procurar_pessoa.getString("nome");
-	                String email = procurar_pessoa.getString("email");
-	                String endereco = procurar_pessoa.getString("endereco");
-	                String CPF = procurar_pessoa.getString("CPF");
-
-	                System.out.println("Código da pessoa: " + cod_pessoa);
-	                System.out.println("Código do professor: " + cod_professor);
-	                System.out.println("Nome do professor: " + nome);
-	                System.out.println("Email do professor: " + email);
-	                System.out.println("Endereco do professor: " + endereco);
-	                System.out.println("CPF do professor: " + CPF);
-	                System.out.println("Curso do professor: " + curso);
+	        	 ResultSet procurar_professor = statement.executeQuery("SELECT * FROM professor");
+	            while (professor.next()) {
+	                int curso= procurar_professor.getInt("cod_curso");
+	                float salario= procurar_professor.getFloat("salario");
+	                
+	                System.out.println("Salario do professor: R$" + salario);
+	                System.out.println("Código do curso do professor: " + curso);
 	                System.out.println();
+	                System.out.println("----------------------");
 	                
 	            }}else {
 	            	System.out.println("Nenhum professor encontrado.");
@@ -65,44 +56,39 @@ public class Professor extends Pessoa{
 
 		}
 		
-		public static ResultSet pesquisar() {
+		public int pesquisar() {
 			try{
-				System.out.println("Qual o nome da pessoa?");
-	            String nomeAluno = scanner.next();
+				System.out.println("Digite o código da pessoa:");
+				cod_pessoa = scanner.nextInt();
+				Statement statement = Armazenamento.conn.createStatement();
+	            
+				ResultSet procurar_pessoa = statement.executeQuery("SELECT * FROM professor WHERE cod_pessoa = "+ cod_pessoa);
 
-	            String sql = "SELECT * FROM pessoa WHERE nome = '" + nomeAluno + "'";
+	            if (procurar_pessoa.next()) {
+	                float salario = procurar_pessoa.getFloat("salario");
+	                int curso  = procurar_pessoa.getInt("cod_curso");
+	                cod = procurar_pessoa.getInt("cod_professor");
+	                
+					Pessoa pessoa = new Pessoa();
+					pessoa.getPessoa(cod_pessoa);
 
-	            Statement statement = Armazenamento.conn.createStatement();
-	            ResultSet resultSet = statement.executeQuery(sql);
-
-	            if (resultSet.next()) {
-	                int id = resultSet.getInt("id");
-	                String nome = resultSet.getString("nome");
-	                String cpf = resultSet.getString("cpf");
-	                String curso = resultSet.getString("curso");
-	                String turma = resultSet.getString("turma");
-	                String sala = resultSet.getString("sala");
-
-	                System.out.println("Aluno encontrado:");
-	                System.out.println("ID: " + id);
-	                System.out.println("Nome: " + nome);
-	                System.out.println("CPF: " + cpf);
+	                System.out.println("Professor encontrado:");
+	                System.out.println("ID: " + cod);
+	                System.out.println("Salario: " + salario);
 	                System.out.println("Curso: " + curso);
-	                System.out.println("Turma: " + turma);
-	                System.out.println("Sala: " + sala);
+	                System.out.println("----------------------");
 	            } else {
-	                System.out.println("Aluno não encontrado.");
+	                System.out.println("Professor não encontrado.");
 	            }
 
 	        } catch (SQLException e) {
-	            System.out.println("Erro ao pesquisar aluno: " + e.getMessage());
+	            System.out.println("Erro ao pesquisar professor: " + e.getMessage());
 	        }
-			return null;
+			return 0;
 
 		}
 	    
 	    public int inserir() {
-	    	int id;
 	        
 	        try {
 	        int idPessoa = super.inserir();
@@ -142,13 +128,64 @@ public class Professor extends Pessoa{
 		    inserir();
 		}
 
-		public static void editarProfessor() {
-			// TODO Auto-generated method stub
-			
-		}
+		   public void editar() {
+		        try {
+		            System.out.print("Insira o código do professor: ");
+		            int id = scanner.nextInt();
 
-		public static void apagar() {
-			// TODO Auto-generated method stub
+		            Statement statement = Armazenamento.conn.createStatement();
+		            ResultSet contar = statement.executeQuery("SELECT count(*) FROM professor WHERE cod_professor = " + id);
+
+		            int count = 0;
+		            if (contar.next()) {
+		                count = contar.getInt(1);
+		            }
+
+		            if (count > 0) {
+		               
+
+		                System.out.print("Insira o código curso do professor para editar: ");
+		                int curso = scanner.nextInt();
+		                System.out.print("Insira o salario do professor para editar: ");
+		                float salario = scanner.nextInt();
+
+		                String editar_curso = "UPDATE professor SET cod_curso = ?, salario=? WHERE cod_professor = ?";
+		                PreparedStatement editar = Armazenamento.conn.prepareStatement(editar_curso);
+		                editar.setInt(1, curso);
+		                editar.setFloat(2, salario);
+		                editar.setInt(3, id);
+		                editar.executeUpdate();
+		                
+		                ResultSet rsPessoa = statement.executeQuery("SELECT cod_pessoa FROM professor WHERE cod_professor="+id);
+
+		                
+		                Pessoa pessoa = new Pessoa();
+		                if (rsPessoa.next())
+		                   pessoa.editar(rsPessoa.getInt(1));
+		            } else {
+		                System.out.println("Nenhum professor encontrado.");
+		            }
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		    }
+
+		public void apagar() {
+			try {
+                System.out.print("Insira o código do professor para deletar: ");
+                cod_pessoa = scanner.nextInt();
+                String deletePessoaSql = "DELETE FROM professor WHERE cod_pessoa = ?";
+                PreparedStatement deletePessoaStatement = Armazenamento.conn.prepareStatement(deletePessoaSql);
+                deletePessoaStatement.setInt(1, cod_pessoa);
+                int pessoaRowsAffected = deletePessoaStatement.executeUpdate();
+                System.out.println("Deletado " + pessoaRowsAffected + " informações na tabela professor.");
+                Pessoa pessoa = new Pessoa();
+                pessoa.deletar(cod_pessoa);
+			}catch (SQLException e) {
+    				e.printStackTrace();
+    				System.out.println("Erro em acessar o banco de dados. Erro: " + e.getMessage());
+            	}
 			
 		}
-}
+			
+		}
