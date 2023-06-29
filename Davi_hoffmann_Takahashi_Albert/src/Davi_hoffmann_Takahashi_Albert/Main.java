@@ -77,20 +77,17 @@ public class Main {
 	            case 1:
 	            	Aluno aluno = new Aluno();
 	            	aluno.editarAluno();
-	                System.out.println("Aluno editado.");
 	                break;
 	            case 2:
-	                Sala.editarSala();
-	                System.out.println("Sala editada.");
+	            	Sala sala = new Sala();
+	            	sala.editarSala();
 	                break;
 	            case 3:
 	                Curso.editarCurso();
-	                System.out.println("Curso editado.");
 	                break;
 	            case 4:
 	            	Professor professor = new Professor();
 	            	professor.editar();
-	            	System.out.println("Professor editado.");
 	                break;
 	            case 5:
 	                Turma.editarTurma();
@@ -186,7 +183,8 @@ public class Main {
 	                break;
 	            case 2:
 	            	if(pesquisar==1) {
-	            		Sala.exibir();
+	            		Sala sala = new Sala();
+	            		sala.exibir();
 	            	}else {
 	            		Sala sala = new Sala();
 	            		sala.pesquisar();
@@ -194,7 +192,8 @@ public class Main {
 	                break;
 	            case 3:
 	            	if(pesquisar==1) {
-	            		Curso.exibir();
+	            		Curso curso = new Curso();
+	            		curso.exibir();
 	            	}else {
 	            		Curso curso = new Curso();
 	            		curso.pesquisar();
@@ -211,9 +210,11 @@ public class Main {
 	                break;
 	            case 5:
 	            	if(pesquisar==1) {
-	            		Turma.exibir();
+	            		Turma turma = new Turma();
+	            		turma.exibir();
 	            	}else {
-	            		Turma.pesquisar();
+	            		Turma turma = new Turma();
+	            		turma.pesquisar();
 	            	}
 	                break;
 	                case 6:

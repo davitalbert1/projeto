@@ -63,7 +63,7 @@ class Turma{
     }
 
     
-	public static void exibir() {
+	public void exibir() {
         try {
 	        Statement statementTurmas = Armazenamento.conn.createStatement();
 	        Statement statementNumeroAlunos = Armazenamento.conn.createStatement();
@@ -105,7 +105,7 @@ class Turma{
 
 	}
 	
-	public static ResultSet pesquisar() {
+	public ResultSet pesquisar() {
 		try{
 			System.out.println("Qual o código da turma?");
             String nomeAluno = scanner.next();

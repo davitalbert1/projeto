@@ -84,7 +84,7 @@ public class Sala {
 		setCurso(curso);
 	}
     
-	public static void editarSala() {
+	public void editarSala() {
 		exibir();
 		System.out.println("Escolha o id de qual sala você quer:");
 		cod_sala = scanner.nextInt();
@@ -133,7 +133,7 @@ public class Sala {
     			}
 	}
     
-	public static void exibir() {
+	public void exibir() {
         try {
  	       	Statement statement = Armazenamento.conn.createStatement();
 	           ResultSet contar = statement.executeQuery("SELECT count(*) FROM sala");

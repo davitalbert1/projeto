@@ -13,7 +13,7 @@ import java.util.Scanner;
 class Curso {
 	private static String nome_curso, descricao_curso;
     private static int carga_horaria, cod_curso;
-    private static boolean ativo;
+    private boolean ativo;
     
     static Scanner scanner = new Scanner(System.in);
 
@@ -45,11 +45,10 @@ class Curso {
     	this.ativo=ativo;
     }
     
-	public static void exibir() {
+	public void exibir() {
         try {
  	       	Statement statement = Armazenamento.conn.createStatement();
 	           ResultSet contar = statement.executeQuery("SELECT count(*) FROM curso");
-	           ResultSet ver = statement.executeQuery("SELECT * FROM curso");
 	           int count=0;
 	           for (; contar.next();) {
 	        	   count = contar.getInt(1);
@@ -58,6 +57,7 @@ class Curso {
          if (count>0) {
         	 
             while (contar.next()) {
+            	ResultSet ver = statement.executeQuery("SELECT * FROM curso");
                 int cod= ver.getInt("cod_curso");
                 String nome = ver.getString("nome_curso");
                 int descricao = ver.getInt("descricao_curso");
